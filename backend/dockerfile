@@ -1,30 +1,34 @@
-FROM node:18 AS development
+FROM node:19.0.0-alpine as development
 
-WORKDIR /usr/src/app
+USER node
 
-COPY package*.json ./
+WORKDIR /home/node
 
-RUN npm install glob rimraf
+FROM node:19.0.0-alpine as build
 
-RUN npm install --only=development
+USER node
 
-COPY . .
+RUN mkdir -p /home/node/.npm && chown -R 1000:1000 /home/node/.npm
+
+WORKDIR /home/node
+
+COPY package.json .
+
+
+RUN npm install
+
+COPY  --chown=node:node . .
 
 RUN npm run build
 
-FROM node:18-alpine as production
+FROM node:19.0.0-alpine as production
 
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
+USER node
 
-WORKDIR /usr/src/app
+WORKDIR /home/node
 
-COPY package*.json ./
+COPY --from=build --chown=node:node /home/node/dist ./dist
+COPY --from=build --chown=node:node /home/node/node_modules ./node_modules
+COPY --from=build --chown=node:node /home/node/package.json ./package.json
 
-RUN npm install --only=production
-
-COPY . .
-
-COPY --from=development /usr/src/app/dist ./dist
-
-CMD ["node", "dist/main"]
+CMD ["npm", "run", "start:prod"]

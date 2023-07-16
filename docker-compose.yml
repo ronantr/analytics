@@ -3,11 +3,10 @@ version: '3.8'
 services:
     dev:
         container_name: nestjs_api_dev
-        image: nestjs-api-dev:1.0.0
         build:
             context: .
             target: development
-            dockerfile: ./Dockerfile
+            dockerfile: ./backend/Dockerfile
         command: npm run start:debug
         ports:
             - 3000:3000
@@ -15,9 +14,27 @@ services:
         networks:
             - nesjs-network
         volumes:
-            - .:/usr/src/app
-            - /usr/src/app/node_modules
+            - ./backend:/home/node
         restart: unless-stopped
+### Frontend ###
+#    site-web:
+#        image: node:18-alpine
+#        working_dir: /app
+#        ports:
+#        - "80:80"
+#        volumes:
+#        - ./site-web:/app
+#        command: sh -c "npm install && npm run start"
+
+    analytics:
+        image: node:18-alpine
+        working_dir: /app
+        ports:
+        - "3001:3001"
+        volumes:
+        - ./frontend:/app
+        command: sh -c "npm install && npm run start"
+### DB ###
     database:
         container_name: nestjs_api_database
         image: postgres:12.2
@@ -40,26 +57,18 @@ services:
         networks:
             - nesjs-network
         restart: unless-stopped
-
-
-        
-    prod:
-        container_name: nestjs_api_prod
-        image: nestjs-api-prod:1.0.0
-        build:
-            context: .
-            target: production
-            dockerfile: ./Dockerfile
-        command: npm run start:prod
+    mongo:
+        image: mongo:latest
+        restart: always
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: example
         ports:
-            - 3000:3000
-            - 9229:9229
-        networks:
-            - nesjs-network
+            - 27017:27017
         volumes:
-            - .:/usr/src/app
-            - /usr/src/app/node_modules
-        restart: unless-stopped
+        - ./mongodb:/data/db
+
+
 
 networks:
     nesjs-network:
