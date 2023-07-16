@@ -43,12 +43,15 @@ $ npm install
 
 ```bash
 # development
+$ cd backend
 $ npm run start
 
 # watch mode
+$ cd backend
 $ npm run start:dev
 
 # production mode
+$ cd backend
 $ npm run start:prod
 ```
 
@@ -56,12 +59,15 @@ $ npm run start:prod
 
 ```bash
 # unit tests
+$ cd backend
 $ npm run test
 
 # e2e tests
+$ cd backend
 $ npm run test:e2e
 
 # test coverage
+$ cd backend
 $ npm run test:cov
 ```
 
