@@ -22,13 +22,6 @@ Prod start
 git clone https://github.com/ronantr/analytics.git
 docker-compose up prod database
 ```
-
-## Contributors
-
-* **Kurunchi CHANDRA** - [kchandra77](https://github.com/kchandra77)
-* **Thushanth PATHMASEELAN** - [pthushanth](https://github.com/pthushanth)
-* **Ronan Trouillard** - [ronantr](https://github.com/ronantr)
-
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
